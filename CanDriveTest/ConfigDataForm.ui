@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ConfigDataForm</class>
+ <widget class="QWidget" name="ConfigDataForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>990</width>
+    <height>709</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_3">
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QComboBox" name="config_comboBox">
+         <property name="maximumSize">
+          <size>
+           <width>150</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="currentIndex">
+          <number>6</number>
+         </property>
+         <item>
+          <property name="text">
+           <string>系统命令</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>写入参数</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>读取参数</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>电机A霍尔侦测</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>电机B霍尔侦测</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>同时侦测A/B</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>NULL</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="MarqueeWidget" name="widget_A" native="true"/>
+       </item>
+       <item>
+        <widget class="MarqueeWidget" name="widget_B" native="true"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QScrollArea" name="scrollArea">
+       <property name="widgetResizable">
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="scrollAreaWidgetContents">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>964</width>
+          <height>653</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QTreeView" name="treeView"/>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MarqueeWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">Message/MarqueeWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
