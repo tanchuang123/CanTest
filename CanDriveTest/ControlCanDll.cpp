@@ -1,6 +1,7 @@
 ﻿#include "ControlCanDll.h"
 #include <QtDebug>
 #include <QTextEdit>
+#include <QMessageBox>
 ControlCanDll * ControlCanDll::pControlCanDll = Q_NULLPTR;
 
 ControlCanDll::ControlCanDll()
@@ -203,7 +204,6 @@ bool ControlCanDll::sendData(int index,int value,int value_command_type,int valu
     for(int i=0;i<48;i++)
     {
         vco[i].ID =  id_text.toUInt();
-//        qDebug()<<vco[i].ID;
         vco[i].RemoteFlag = 0;
         vco[i].ExternFlag = 0;
         vco[i].DataLen = 6;
@@ -513,6 +513,7 @@ VCI_CAN_OBJ ControlCanDll::Receive_info()
    {
         reciveStrList<<"NULL"<<"NULL"<<"NULL"<<"NULL"<<"NULL"<<"NULL";
         CloseDevice();
+         return receivedata;
    }
    else
    {
@@ -526,7 +527,7 @@ VCI_CAN_OBJ ControlCanDll::Receive_info()
               QString debugStr7 = QString("%1").arg(receivedata.Data[7],8,16,QLatin1Char('0'));
               qDebug()<<debugStr0<<debugStr1<<debugStr2<<debugStr3<<debugStr4<<debugStr5<<"receivedata.ID"<<receivedata.ID<<"receive";
 //              qDebug()<<debugStr0.toLower() <<debugStr1.toUInt()<<debugStr2.toUInt()<<debugStr3.toUInt()<<"ERROR";
-           return receivedata;
+             return receivedata;
    }
 
 }
@@ -939,7 +940,7 @@ QMap<int,QVariant> ControlCanDll::HallDetectionB(int index)
 }
 //byte转INT
 int ControlCanDll::bytesToInt(byte* bytes,int size)
-   {
+{
 
   int addr  = bytes[0] & 0xFF;
        addr |= (bytes[1] & 0x00FF);
@@ -947,4 +948,52 @@ int ControlCanDll::bytesToInt(byte* bytes,int size)
        addr |= (bytes[3] & 0x000000FF);
         return addr;
 
-  }
+}
+void ControlCanDll::WriteData(int index,int value,int valueParameter_address)
+{
+
+    BYTE write_read_Parameter_address[]=//写入参数//读取参数
+    {
+        0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x10,0x11,/*int*/0x12,0x13,0x14,0x15,0x16,0x17,0x18,0x19,0x1A,/*float*/0x1B,0x1C,
+        0x1D,0x1E,0x1F,0x30,/*int*/0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x3A,0x3B,0x3C,0x3D,0x3E,0x3F,0x40,
+        0x41,0x42,/*float*/0x50,/*int*/0x51,0x52,0x53,0x54,0x55,0x56,/*float*/0x60,/*int*/0x61,0x62,0x63,0x64,0x65,0x66,/*float*/
+
+    };
+    union FloatToByte
+    {
+      unsigned char b[4];
+      float value;
+    } FtoB;
+       DWORD dwRel;
+       VCI_CAN_OBJ vco[48];
+       QString id_text= _data.at(index);//启动报文返回的ID
+
+       FtoB.value= value;
+       for(int i=0;i<48;i++)
+       {
+           vco[i].ID =  id_text.toUInt(0,16);
+           vco[i].RemoteFlag = 0;
+           vco[i].ExternFlag = 0;
+           vco[i].DataLen = 6;
+
+           vco[i].Data[0] = FtoB.b[0];//配置数据
+           vco[i].Data[1] = FtoB.b[1];//配置数据
+           vco[i].Data[2] = FtoB.b[2];//配置数据
+           vco[i].Data[3] = FtoB.b[3];//配置数据
+//           vco[i].Data[0] = 0;//配置数据
+//           vco[i].Data[1] = 0;//配置数据
+//           vco[i].Data[2] = 0;//配置数据
+//           vco[i].Data[3] = 1;//配置数据
+           vco[i].Data[4] = write_read_Parameter_address[valueParameter_address];//参数地址
+           vco[i].Data[5] = 0x01;//命令类型
+           qDebug()<<id_text<<FtoB.value<<vco[i].Data[0]<<vco[i].Data[1]<<vco[i].Data[2]<<vco[i].Data[3]<<vco[i].Data[4]<<vco[i].Data[5] <<"gggggggggggggggggggggggggggggg";
+       }
+    if(getSendStatus())
+    {
+
+        dwRel = VCI_Transmit(_nDeviceType, _nDeviceInd, _nCANInd, vco,_size_num);
+        VCI_CAN_OBJ receivedata=Receive_info();
+        qDebug()<<dwRel<<"ccccccccccccccccccccccc";
+
+    }
+}

@@ -6,6 +6,9 @@ ConfigDataWriteForm::ConfigDataWriteForm(QWidget *parent) :
     ui(new Ui::ConfigDataWriteForm)
 {
     ui->setupUi(this);
+    WriteDataDialog::init();
+    connect( ui->tableWidget_Write, SIGNAL(cellDoubleClicked (int, int)), this, SLOT( cellSelected( int, int )));
+    connect(WriteDataDialog::init(), SIGNAL(signalValue(int,QString)),this ,SLOT(slotTableWidgetItem(int,QString)));
 }
 ConfigDataWriteForm * ConfigDataWriteForm:: init()
 {
@@ -21,20 +24,40 @@ ConfigDataWriteForm::~ConfigDataWriteForm()
 }
 void ConfigDataWriteForm::initTableWidget()
 {
-    ui->tableWidget_Write->setWindowTitle("QTableWidget & Item");
-    ui->tableWidget_Write->resize(350, 200);  //设置表格
-    QStringList header;
-    header<<"Month"<<"Description";
-    ui->tableWidget_Write->setRowCount(3);
-    ui->tableWidget_Write->setColumnCount(2);
+      QMap<int,QVariant> valueMap1= Setting::init()->ReadIniAttribute();
+      QMap<int,QVariant> valueMap2= Setting::init()->ReadIniValue();
+      QHeaderView* headerView =  ui->tableWidget_Write->verticalHeader();
+      headerView->setHidden(true);
 
-    ui->tableWidget_Write->setHorizontalHeaderLabels(header);
-    ui->tableWidget_Write->setItem(0,0,new QTableWidgetItem("Jan"));
-    ui->tableWidget_Write->setItem(1,0,new QTableWidgetItem("Feb"));
-    ui->tableWidget_Write->setItem(2,0,new QTableWidgetItem("Mar"));
-    ui->tableWidget_Write->setItem(0,1,new QTableWidgetItem(QIcon("images/IED.png"), "Jan's month"));
-    ui->tableWidget_Write->setItem(1,1,new QTableWidgetItem(QIcon("images/IED.png"), "Feb's month"));
-    ui->tableWidget_Write->setItem(2,1,new QTableWidgetItem(QIcon("images/IED.png"), "Mar's month"));
-    ui->tableWidget_Write->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->tableWidget_Write->show();
+      ui->tableWidget_Write->setAlternatingRowColors (true);
+      ui->tableWidget_Write->setAlternatingRowColors(true);
+      ui->tableWidget_Write->setRowCount(valueMap1.size()-1);
+      ui->tableWidget_Write->setColumnCount(3);
+//      ui->tableWidget_Write->currentIndex()
+      QStringList headerString;
+      headerString<<QStringLiteral("属性状态")<<QStringLiteral( "参数地址")<<QStringLiteral("属性值");
+      ui->tableWidget_Write->setHorizontalHeaderLabels(headerString);
+
+      ui->tableWidget_Write->horizontalHeader()->setStretchLastSection(true);//关键
+      ui->tableWidget_Write->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+      ui->tableWidget_Write->setEditTriggers(QAbstractItemView::NoEditTriggers);
+//        ui->tableWidget_Write->setShowGrid(false);
+      ui->tableWidget_Write->setSelectionBehavior(QAbstractItemView::SelectRows);
+      ui->tableWidget_Write->setSelectionMode(QAbstractItemView::SingleSelection);
+      for(int i=0;i<valueMap1.size();i++)
+      {
+           ui->tableWidget_Write->setItem(i,0,new QTableWidgetItem(valueMap1.value(i).toString()));
+           ui->tableWidget_Write->setItem(i,1,new QTableWidgetItem(valueMap2.value(i).toString()));
+      }
+    show();
+}
+void ConfigDataWriteForm::cellSelected( int nRow, int nCol)
+{
+     QString text= ui->tableWidget_Write->item(nRow,0)->text();//item(行，列)
+     QString str= ui->tableWidget_Write->item(nRow,1)->text();//item(行，列)
+     WriteDataDialog::init()->GetStatusValue(text,nRow);
+}
+void ConfigDataWriteForm::slotTableWidgetItem(int index,QString text)
+{
+      ui->tableWidget_Write->setItem(index,2,new QTableWidgetItem(text));
 }

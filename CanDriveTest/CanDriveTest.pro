@@ -36,7 +36,8 @@ SOURCES += \
     Setting/setting.cpp \
     SystemStatusForm.cpp \
     Message/MarqueeWidget.cpp \
-    ConfigDataWriteForm.cpp
+    ConfigDataWriteForm.cpp \
+    Message/WriteDataDialog.cpp
 
 HEADERS += \
         TheMainForm.h \
@@ -51,7 +52,8 @@ HEADERS += \
     Setting/setting.h \
     SystemStatusForm.h \
     Message/MarqueeWidget.h \
-    ConfigDataWriteForm.h
+    ConfigDataWriteForm.h \
+    Message/WriteDataDialog.h
 
 FORMS += \
         TheMainForm.ui \
@@ -60,7 +62,8 @@ FORMS += \
     LoopBDataForm.ui \
     ConfigDataForm.ui \
     SystemStatusForm.ui \
-    ConfigDataWriteForm.ui
+    ConfigDataWriteForm.ui \
+    Message/WriteDataDialog.ui
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/lib/ -lControlCAN
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/lib/ -lControlCAN

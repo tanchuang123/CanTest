@@ -6,6 +6,8 @@
 #include <QMap>
 #include <QThread>
 #include <QTimer>
+#include <QVariant>
+
 class ControlCanDll
 {
 //    Q_OBJECT
@@ -52,7 +54,7 @@ public:
      bool openHallDetectionB(int index);
      QMap<int ,QVariant> HallDetectionA(int index);
      QMap<int,QVariant>  HallDetectionB(int index);
-     void WriteData(int index,float value);
+     void WriteData(int index,int value,int valueParameter_address);
      void  getStatusMap_(QMap<int,QVariant> map)
      {
          if(!_varMapStatus.isEmpty())

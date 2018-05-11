@@ -21,10 +21,11 @@ TheMainForm::TheMainForm(QWidget *parent) :
     connect(BLoopTimer, SIGNAL(timeout()), this, SLOT(slotBLoopData()));
     connect(ConfigTimer, SIGNAL(timeout()), this, SLOT(slotConfigData()));
     connect(LoopADataForm::init(), SIGNAL(signalCloseStatus(bool,int)),this,SLOT(slotClose(bool,int)));
-    connect(LoopBDataForm::init(), SIGNAL(signalCloseStatus(bool,int)),this,SLOT(slotClose(bool,int)));
-    connect(ConfigDataForm::init(),SIGNAL(signalCloseStatus(bool,int)),this,SLOT(slotClose(bool,int)));
+    connect(LoopBDataForm::init(),  SIGNAL(signalCloseStatus(bool,int)),this,SLOT(slotClose(bool,int)));
+    connect(ConfigDataForm::init(),  SIGNAL(signalCloseStatus(bool,int)),this,SLOT(slotClose(bool,int)));
 //    Setting::init();
 //    Setting::init()->ReadIni();
+     ui->comboBox_can_id->setEnabled(false);
 }
 
 TheMainForm::~TheMainForm()
@@ -41,13 +42,14 @@ void TheMainForm::on_pushButton_Start_can_clicked()
            {
 //               qDebug()<<"701"<<text_id.toUInt(0,16);
              QStringList receivedata =   ControlCanDll::init()->Receive();
-             if(receivedata.isEmpty())
+             if(receivedata.at(0)=="NULL")
              {
                  UiClass::init()->showToastr(QStringLiteral( "启动失败!"),SCToastr::E_Info,Q_NULLPTR,false);
                  ControlCanDll::init()->CloseDevice();
              }
              else
              {
+                 ui->comboBox_can_id->setEnabled(true);
                  ui->label_A_request->setText(receivedata.at(0));
                  ui->label_A_response->setText(receivedata.at(1));
                  ui->label_B_request->setText(receivedata.at(2));
@@ -103,6 +105,7 @@ void TheMainForm::slotCanIdLoop(int id)
         }
     case Can_ID::ID_Config:
         {
+//        ConfigTimer->start(3000);
         if(ControlCanDll::init()->getReciveStatus())
         {
             QMap<int,QVariant> dataMap= ControlCanDll::init()->read_configdata_back(4);

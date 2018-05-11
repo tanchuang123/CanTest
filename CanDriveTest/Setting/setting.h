@@ -10,7 +10,8 @@ public:
     static Setting*init();
     Setting();
     void setIni(QList<double> data,QString IniName);
-    void ReadIni();
+    QMap<int,QVariant>  ReadIniAttribute();
+    QMap<int,QVariant>  ReadIniValue();
     void writeIni();
 private:
     static  Setting *pSetting;

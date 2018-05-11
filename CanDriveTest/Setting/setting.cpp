@@ -61,28 +61,43 @@ void Setting::writeIni()
 //        delete pIni;
 
 //}
-void Setting::ReadIni()
+QMap<int,QVariant>  Setting::ReadIniAttribute()
 {
+    QMap<int,QVariant> valueMap;
     pIni=new QSettings("B:/work/CanDriveTest/Setting/config.ini",QSettings::IniFormat);
     pIni->setIniCodec(QTextCodec::codecForName("GBK"));
-//    for(int i=0;i<55;i++)
-//    {
-//        QString nMain = pIni->value("/setting/value").toString();
-//        QString str = pIni->value("/setting/type").toString();
-//        qDebug()<< "value = " << nMain;
-//        qDebug()<< "type = " <<str;
-////        qDebug() << "country = " << str;
-//    }
-
 
     QString sArg1 = "";
     QString sArg2 = "";
     for(int i=0;i<56;i++)
     {
     sArg1 = pIni->value("/setting/value"+tr("%1").arg(i)).toString();
-        qDebug("value = %s\n", sArg1.toStdString().data());
-
-    sArg2 = pIni->value("/setting/type"+tr("%1").arg(i)).toString();
-        qDebug("type= %s\n", sArg2.toStdString().data());
+//        qDebug("value = %s\n", sArg1.toStdString().data());
+//        qDebug()<<sArg1;
+     sArg2 = pIni->value("/setting/type"+tr("%1").arg(i)).toString();
+//        qDebug("type= %s\n", sArg2.toStdString().data());
+//        qDebug()<<sArg2;
+        valueMap.insert(i,sArg2);
     }
+    return valueMap;
+}
+QMap<int,QVariant>  Setting::ReadIniValue()
+{
+    QMap<int,QVariant> valueMap;
+    pIni=new QSettings("B:/work/CanDriveTest/Setting/config.ini",QSettings::IniFormat);
+    pIni->setIniCodec(QTextCodec::codecForName("GBK"));
+
+    QString sArg1 = "";
+    QString sArg2 = "";
+    for(int i=0;i<56;i++)
+    {
+    sArg1 = pIni->value("/setting/value"+tr("%1").arg(i)).toString();
+//        qDebug("value = %s\n", sArg1.toStdString().data());
+//        qDebug()<<sArg1;
+     sArg2 = pIni->value("/setting/type"+tr("%1").arg(i)).toString();
+//        qDebug("type= %s\n", sArg2.toStdString().data());
+//        qDebug()<<sArg2;
+        valueMap.insert(i,sArg1);
+    }
+    return valueMap;
 }
