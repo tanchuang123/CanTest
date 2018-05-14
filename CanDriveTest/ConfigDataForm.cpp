@@ -6,10 +6,6 @@ ConfigDataForm::ConfigDataForm(QWidget *parent) :
     ui(new Ui::ConfigDataForm)
 {
     ui->setupUi(this);
-
-//    setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);//模态对话框
-//    setWindowModality(Qt::ApplicationModal);
-//     ui->widget->setText("hello");
     QStandardItemModel *model = new QStandardItemModel(this);
     QStringList list;
     list<<QStringLiteral("属性")<<QStringLiteral("值")<<QStringLiteral("状态");
@@ -208,6 +204,7 @@ void ConfigDataForm::slotConfigStatus(int index)
          HallTimerA->stop();
          HallTimerB->stop();
          ConfigDataWriteForm::init()->initTableWidget();
+         ui->treeView->setEditTriggers(QTreeView::NoEditTriggers);//不可编辑
     }
         break;
     case ConfigStatus::Read_Command     :

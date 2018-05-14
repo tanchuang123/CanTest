@@ -64,7 +64,7 @@ void Setting::writeIni()
 QMap<int,QVariant>  Setting::ReadIniAttribute()
 {
     QMap<int,QVariant> valueMap;
-    pIni=new QSettings("B:/work/CanDriveTest/Setting/config.ini",QSettings::IniFormat);
+    pIni=new QSettings("config.ini",QSettings::IniFormat);
     pIni->setIniCodec(QTextCodec::codecForName("GBK"));
 
     QString sArg1 = "";
@@ -75,8 +75,6 @@ QMap<int,QVariant>  Setting::ReadIniAttribute()
 //        qDebug("value = %s\n", sArg1.toStdString().data());
 //        qDebug()<<sArg1;
      sArg2 = pIni->value("/setting/type"+tr("%1").arg(i)).toString();
-//        qDebug("type= %s\n", sArg2.toStdString().data());
-//        qDebug()<<sArg2;
         valueMap.insert(i,sArg2);
     }
     return valueMap;
@@ -84,7 +82,7 @@ QMap<int,QVariant>  Setting::ReadIniAttribute()
 QMap<int,QVariant>  Setting::ReadIniValue()
 {
     QMap<int,QVariant> valueMap;
-    pIni=new QSettings("B:/work/CanDriveTest/Setting/config.ini",QSettings::IniFormat);
+    pIni=new QSettings("config.ini",QSettings::IniFormat);
     pIni->setIniCodec(QTextCodec::codecForName("GBK"));
 
     QString sArg1 = "";

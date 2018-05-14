@@ -322,7 +322,7 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
             if(sendData(index,2,0,0,0))
             {
                 VCI_CAN_OBJ receivedata= Receive_info();
-                unsigned char pMem[] = {receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+                unsigned char pMem[] = {receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)pMem;
                 varMap.insert(0x02,*p );
 //                  qDebug()<<*p<<"0x02"<<receivedata.ID;
@@ -335,7 +335,7 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
             if(sendData(index,3,0,0,0))
             {
                 VCI_CAN_OBJ receivedata= Receive_info();
-                unsigned char pMem[] = {receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+                unsigned char pMem[] = {receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)pMem;
                 varMap.insert(0x03,*p );
 //                qDebug()<<*p<<"0x03"<<receivedata.ID;
@@ -392,7 +392,7 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
             if(sendData(index,7,0,0,0))
             {
                 VCI_CAN_OBJ receivedata= Receive_info();
-                unsigned char pMem[] = {receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+                unsigned char pMem[] = {receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)pMem;
                 varMap.insert(0x21,*p );
 //                qDebug()<<*p<<"0x21"<<receivedata.ID;
@@ -405,7 +405,7 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
             if(sendData(index,8,0,0,0))
             {
                 VCI_CAN_OBJ receivedata= Receive_info();
-                unsigned char pMem[] = {receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+                unsigned char pMem[] = {receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)pMem;
 //                qDebug()<<*p<<"0x22"<<receivedata.ID;
                 varMap.insert(0x22,*p );
@@ -418,7 +418,7 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
             if(sendData(index,9,0,0,0))
             {
                 VCI_CAN_OBJ receivedata= Receive_info();
-                unsigned char pMem[] = {receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+                unsigned char pMem[] = {receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)pMem;
 //                qDebug()<<*p<<"0x23"<<receivedata.ID;
                 varMap.insert(0x23,*p );
@@ -431,7 +431,7 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
             if(sendData(index,10,0,0,0))
             {
                 VCI_CAN_OBJ receivedata= Receive_info();
-                unsigned char pMem[] = {receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+                unsigned char pMem[] = {receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)pMem;
 //                qDebug()<<*p<<"0x24"<<receivedata.ID;
                 varMap.insert(0x24,*p );
@@ -444,7 +444,7 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
             if(sendData(index,11,0,0,0))
             {
                 VCI_CAN_OBJ receivedata= Receive_info();
-                unsigned char pMem[] = {receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+                unsigned char pMem[] = {receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)pMem;
 //                qDebug()<<*p<<"0x25"<<receivedata.ID;
                 varMap.insert(0x25,*p );
@@ -457,7 +457,7 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
             if(sendData(index,12,0,0,0))
             {
                 VCI_CAN_OBJ receivedata= Receive_info();
-                unsigned char pMem[] = {receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+                unsigned char pMem[] = {receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)pMem;
 //                qDebug()<<*p<<"0x26"<<receivedata.ID;
                 varMap.insert(0x26,*p );
@@ -470,7 +470,7 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
             if(sendData(index,13,0,0,0))
             {
                 VCI_CAN_OBJ receivedata= Receive_info();
-                unsigned char pMem[] = {receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+                unsigned char pMem[] = {receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)pMem;
 //                qDebug()<<*p<<"0x27"<<receivedata.ID;
                 varMap.insert(0x27,*p );
@@ -483,7 +483,7 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
             if(sendData(index,14,0,0,0))
             {
                 VCI_CAN_OBJ receivedata= Receive_info();
-                unsigned char pMem[] = {receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+                unsigned char pMem[] = {receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)pMem;
 //                qDebug()<<*p<<"0x28";
                 varMap.insert(0x28,*p );
@@ -539,7 +539,7 @@ QMap<int , QVariant> ControlCanDll::SystemCommandBack(int index)
                 if(sendData(index,0,0,2,0))
                 {
                 VCI_CAN_OBJ receivedata=Receive_info();
-                BYTE BYTES[4]={receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+                BYTE BYTES[4]={receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 int value=bytesToInt(BYTES,4);
                 varMap.insert(2,value);
                 }
@@ -559,7 +559,7 @@ QMap<int,QVariant> ControlCanDll::read_configdata_back(int index)//读取参数
                VCI_CAN_OBJ receivedata=Receive_info();
                if(receivedata.Data[4]==0x0)
                {
-                   BYTE BYTES[4]={receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+                   BYTE BYTES[4]={receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                    int values=bytesToInt(BYTES,4);
                    varMap.insert(i,values);
                    varMapStatus.insert(i,QStringLiteral("OK"));
@@ -601,7 +601,7 @@ QMap<int,QVariant> ControlCanDll::read_configdata_back(int index)//读取参数
             VCI_CAN_OBJ receivedata=Receive_info();
             if(receivedata.Data[4]==0x0)
             {
-                BYTE BYTES[4]={receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+                BYTE BYTES[4]={receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)BYTES;
                 varMap.insert(i,*p);
                 varMapStatus.insert(i,QStringLiteral("OK"));
@@ -643,7 +643,7 @@ QMap<int,QVariant> ControlCanDll::read_configdata_back(int index)//读取参数
             VCI_CAN_OBJ receivedata=Receive_info();
             if(receivedata.Data[4]==0x0)
             {
-                BYTE BYTES[4]={receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+                BYTE BYTES[4]={receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 int values=bytesToInt(BYTES,4);
                 varMap.insert(i,values);
                 varMapStatus.insert(i,QStringLiteral("OK"));
@@ -684,7 +684,7 @@ QMap<int,QVariant> ControlCanDll::read_configdata_back(int index)//读取参数
             VCI_CAN_OBJ receivedata=Receive_info();
             if(receivedata.Data[4]==0x0)
             {
-                BYTE BYTES[4]={receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+                BYTE BYTES[4]={receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)BYTES;
                 varMap.insert(i,*p);
                 varMapStatus.insert(i,QStringLiteral("OK"));
@@ -723,7 +723,7 @@ QMap<int,QVariant> ControlCanDll::read_configdata_back(int index)//读取参数
         VCI_CAN_OBJ receivedata=Receive_info();
          if(receivedata.Data[4]==0x0)
          {
-             BYTE BYTES[4]={receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+             BYTE BYTES[4]={receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
              int values=bytesToInt(BYTES,4);
              varMap.insert(42,values);
              varMapStatus.insert(42,QStringLiteral("OK"));
@@ -764,7 +764,7 @@ QMap<int,QVariant> ControlCanDll::read_configdata_back(int index)//读取参数
             VCI_CAN_OBJ receivedata=Receive_info();
              if(receivedata.Data[4]==0x0)
              {
-                 BYTE BYTES[4]={receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+                 BYTE BYTES[4]={receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                  float *p = (float*)BYTES;
                  varMap.insert(i,*p);
                  varMapStatus.insert(i,QStringLiteral("OK"));
@@ -804,7 +804,7 @@ QMap<int,QVariant> ControlCanDll::read_configdata_back(int index)//读取参数
         VCI_CAN_OBJ receivedata=Receive_info();
         if(receivedata.Data[4]==0x0)
         {
-            BYTE BYTES[4]={receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+            BYTE BYTES[4]={receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
             int values=bytesToInt(BYTES,4);
             varMap.insert(49,values);
             varMapStatus.insert(49,QStringLiteral("OK"));
@@ -846,7 +846,7 @@ QMap<int,QVariant> ControlCanDll::read_configdata_back(int index)//读取参数
             VCI_CAN_OBJ receivedata=Receive_info();
             if(receivedata.Data[4]==0x0)
             {
-                BYTE BYTES[4]={receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+                BYTE BYTES[4]={receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)BYTES;
                 varMap.insert(i,*p);
                 varMapStatus.insert(i,QStringLiteral("OK"));
@@ -949,7 +949,7 @@ int ControlCanDll::bytesToInt(byte* bytes,int size)
         return addr;
 
 }
-void ControlCanDll::WriteData(int index,int value,int valueParameter_address)
+void ControlCanDll::WriteData(int index,float value,int valueParameter_address)
 {
 
     BYTE write_read_Parameter_address[]=//写入参数//读取参数
@@ -976,10 +976,10 @@ void ControlCanDll::WriteData(int index,int value,int valueParameter_address)
            vco[i].ExternFlag = 0;
            vco[i].DataLen = 6;
 
-           vco[i].Data[0] = FtoB.b[0];//配置数据
-           vco[i].Data[1] = FtoB.b[1];//配置数据
-           vco[i].Data[2] = FtoB.b[2];//配置数据
-           vco[i].Data[3] = FtoB.b[3];//配置数据
+           vco[i].Data[0] = FtoB.b[3];//配置数据
+           vco[i].Data[1] = FtoB.b[2];//配置数据
+           vco[i].Data[2] = FtoB.b[1];//配置数据
+           vco[i].Data[3] = FtoB.b[0];//配置数据
 //           vco[i].Data[0] = 0;//配置数据
 //           vco[i].Data[1] = 0;//配置数据
 //           vco[i].Data[2] = 0;//配置数据
