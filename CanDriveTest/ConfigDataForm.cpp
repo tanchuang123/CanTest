@@ -17,8 +17,8 @@ ConfigDataForm::ConfigDataForm(QWidget *parent) :
 
     ui->treeView->setColumnWidth(0,250);//列宽
     ui->treeView->setAlternatingRowColors(true);
-    connect(ui->config_comboBox, SIGNAL(currentIndexChanged(int)),this,SLOT(slotConfigStatus(int)));
-//    ui->treeView->setEditTriggers(QTreeView::NoEditTriggers);//不可编辑
+    connect(ui->config_comboBox, SIGNAL(activated(int)),this,SLOT(slotConfigStatus(int)));
+    ui->treeView->setEditTriggers(QTreeView::NoEditTriggers);//不可编辑
 //    //--
 
     /*谭创*/
@@ -34,6 +34,7 @@ ConfigDataForm::ConfigDataForm(QWidget *parent) :
     connect(HallTimerA , SIGNAL(timeout()), this, SLOT(slotHallDataA()));
     connect(HallTimerB , SIGNAL(timeout()), this, SLOT(slotHallDataB()));
     ConfigDataWriteForm::init();
+    Setting::init();
 }
 ConfigDataForm *ConfigDataForm::init()
 {
@@ -204,7 +205,7 @@ void ConfigDataForm::slotConfigStatus(int index)
          HallTimerA->stop();
          HallTimerB->stop();
          ConfigDataWriteForm::init()->initTableWidget();
-         ui->treeView->setEditTriggers(QTreeView::NoEditTriggers);//不可编辑
+
     }
         break;
     case ConfigStatus::Read_Command     :
@@ -215,15 +216,12 @@ void ConfigDataForm::slotConfigStatus(int index)
             QMap<int,QVariant> dataMapStatus= ControlCanDll::init()->getStatusMap();
             ConfigDataForm::init()->initTreeView(dataMap,dataMapStatus);
         }
-         ui->treeView->setEditTriggers(QTreeView::NoEditTriggers);//不可编辑
         break;
      }
     case ConfigStatus::A_Hall_Command     :
     {
-         ui->treeView->setEditTriggers(QTreeView::NoEditTriggers);//不可编辑
          if(ControlCanDll::init()->openHallDetectionA(4))
          {
-
               HallTimerA->start(3000);
          }
 
@@ -231,7 +229,6 @@ void ConfigDataForm::slotConfigStatus(int index)
         break;
     case ConfigStatus::B_Hall_Command     :
     {
-         ui->treeView->setEditTriggers(QTreeView::NoEditTriggers);//不可编辑
         if(ControlCanDll::init()->openHallDetectionB(4))
         {
 
@@ -242,7 +239,6 @@ void ConfigDataForm::slotConfigStatus(int index)
         break;
     case ConfigStatus::A_B_Hall_Command:
     {
-        ui->treeView->setEditTriggers(QTreeView::NoEditTriggers);//不可编辑
        ControlCanDll::init()->openHallDetectionA(4);
        ControlCanDll::init()->openHallDetectionB(4);
        HallTimerA->start(3000);
@@ -286,5 +282,49 @@ void ConfigDataForm::slotHallDataA()
                     break;
                 }
             }
+
+}
+
+void ConfigDataForm::on_pushButton_OUT_clicked()
+{
+
+    if(ControlCanDll::init()->getReciveStatus())
+    {
+        QMap<int,QVariant> dataMap= ControlCanDll::init()->read_configdata_back(4);
+        QMap<int,QVariant> dataMapStatus= ControlCanDll::init()->getStatusMap();
+        QString text =ui->lineEdit_ini->text();
+        Setting::init()->setIni(dataMap,text);
+    }
+
+}
+
+void ConfigDataForm::on_pushButton_IN_clicked()
+{
+    QString fileName = QFileDialog :: getOpenFileName(this, NULL, NULL, "*.ini");
+    if(!fileName.isEmpty())
+    {
+        ConfigDataWriteForm::init()->initTableWidget();
+        QMap<int,QVariant> map= Setting::init()->ReadIniPar(fileName);
+        for(int i=0;i<map.size();i++)
+        {
+             int valueBack= ControlCanDll::init()->WriteData(4,map.value(i).toFloat(),i);
+//               qDebug()<<valueBack<<map.value(i).toString()<<i;
+             if( valueBack==0)
+             {
+                 ConfigDataWriteForm::init()->slotTableWidgetItem(i, map.value(i).toString());
+             }
+             if(valueBack==1)
+             {
+                  ConfigDataWriteForm::init()->slotTableWidgetItem(i,QStringLiteral("写入的参数超过最大阈值 "));
+             }
+             if(valueBack==2)
+             {
+                  ConfigDataWriteForm::init()->slotTableWidgetItem(i, QStringLiteral("写入的参数低于最小阈值 "));
+             }
+        }
+    }
+
+
+
 
 }

@@ -14,12 +14,11 @@ Setting *Setting::init()
     }
     return pSetting;
 }
-void Setting::setIni(QList<double> data,QString IniName)
+void Setting::setIni(QMap<int,QVariant> data,QString IniName)
 {
     if(IniName.trimmed() =="")
     {
-        return;
-
+        ininame = "parameter";
     }
     else {
          ininame=IniName;
@@ -29,11 +28,11 @@ void Setting::setIni(QList<double> data,QString IniName)
     QDateTime current_date_time =QDateTime::currentDateTime();
     QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss");
 
-    for(int i=0;i<data.size();i++)
+    for(int i=0;i<data.size()+1;i++)
     {
 
         Ini->setValue("/setting/time"+tr("%1").arg(i), tr("%1").arg(current_date));
-        Ini->setValue("/setting/data"+tr("%1").arg(i), tr("%1").arg(data.at(i)));
+        Ini->setValue("/setting/dataValue"+tr("%1").arg(i), tr("%1").arg(data.value(i).toFloat()));
 
     }
 
@@ -71,11 +70,9 @@ QMap<int,QVariant>  Setting::ReadIniAttribute()
     QString sArg2 = "";
     for(int i=0;i<56;i++)
     {
-    sArg1 = pIni->value("/setting/value"+tr("%1").arg(i)).toString();
-//        qDebug("value = %s\n", sArg1.toStdString().data());
-//        qDebug()<<sArg1;
      sArg2 = pIni->value("/setting/type"+tr("%1").arg(i)).toString();
         valueMap.insert(i,sArg2);
+//        qDebug()<<sArg2;
     }
     return valueMap;
 }
@@ -90,12 +87,22 @@ QMap<int,QVariant>  Setting::ReadIniValue()
     for(int i=0;i<56;i++)
     {
     sArg1 = pIni->value("/setting/value"+tr("%1").arg(i)).toString();
-//        qDebug("value = %s\n", sArg1.toStdString().data());
-//        qDebug()<<sArg1;
-     sArg2 = pIni->value("/setting/type"+tr("%1").arg(i)).toString();
-//        qDebug("type= %s\n", sArg2.toStdString().data());
-//        qDebug()<<sArg2;
-        valueMap.insert(i,sArg1);
+    valueMap.insert(i,sArg1);
+    }
+    return valueMap;
+}
+QMap<int,QVariant>  Setting::ReadIniPar(QString fileName)
+{
+    QMap<int,QVariant> valueMap;
+    pIni=new QSettings(fileName,QSettings::IniFormat);
+    pIni->setIniCodec(QTextCodec::codecForName("GBK"));
+
+    QString sArg1 = "";
+    for(int i=0;i<56;i++)
+    {
+      sArg1 = pIni->value("/setting/dataValue"+tr("%1").arg(i)).toString();
+//      qDebug()<<sArg1<<"sArg1";
+      valueMap.insert(i,sArg1);
     }
     return valueMap;
 }

@@ -23,10 +23,10 @@ VCI_INIT_CONFIG ControlCanDll::init_config()
 {
     _vic.AccCode=0x00000000;
     _vic.AccMask=0xFFFFFFFF;//屏蔽码
-    _vic.Filter=0;//滤波方式
-    _vic.Timing0=0x01;//波特率定时器 0（BTR0）
-    _vic.Timing1=0x1c;//波特率定时器 1（BTR1）
-    _vic.Mode=0;//模式。=0表示正常模式（相当于正常节点），=1表示只听模式（只接收，不影响总线），=2表示自发自收模式（环回模式）
+    _vic.Filter=0;                       //滤波方式
+    _vic.Timing0=0x01;            //波特率定时器 0（BTR0）
+    _vic.Timing1=0x1c;            //波特率定时器 1（BTR1）
+    _vic.Mode=0;                     //模式。=0表示正常模式（相当于正常节点），=1表示只听模式（只接收，不影响总线），=2表示自发自收模式（环回模式）
     _vic.Reserved=0;
     return _vic;
 }
@@ -48,7 +48,7 @@ _VCI_CAN_OBJ ControlCanDll::init_Device_can_obj()
 //    qDebug()<<p_vco.ID<<p_vco.DataLen<<"id datalen";
     return p_vco;
 }
-bool ControlCanDll::OpenDevice()
+bool ControlCanDll::OpenDevice()//打开CAN卡
 {
 
     DWORD status_open;
@@ -62,7 +62,7 @@ bool ControlCanDll::OpenDevice()
         return true;
     }
 }
-bool ControlCanDll::CloseDevice()
+bool ControlCanDll::CloseDevice()//关闭Can卡
 {
 
     DWORD status_close;
@@ -103,7 +103,6 @@ bool ControlCanDll::StartCAN()
     if(!InitCAN()||!OpenDevice())
     {
         return false;
-
     }
     else
     {
@@ -134,7 +133,7 @@ bool ControlCanDll::Transmit(UINT id)//发送数据
     vco[i].DataLen = 8;
     for(int  j = 0; j < 8; j++)
       {
-          vco[i].Data[j] = j;
+          vco[i].Data[j] =0;
       }
 
     }
@@ -150,7 +149,7 @@ QStringList  ControlCanDll::Receive()
     VCI_CAN_OBJ receivedata;
     QStringList reciveStrList;
     int len ,i;
-    Sleep(1);
+//    Sleep(1);
    len=VCI_Receive(_nDeviceType, _nDeviceInd, _nCANInd,&receivedata,2500,200);
    if(len<=0)
    {
@@ -182,7 +181,7 @@ bool ControlCanDll::sendData(int index,int value,int value_command_type,int valu
     DWORD dwRel;
     VCI_CAN_OBJ vco[48];
     _isSend=false;
-     QString id_text= _data.at(index);//启动报文返回的ID
+   QString id_text= _data.at(index);//启动报文返回的ID
    if(index !=4)
    {
     BYTE byte_arry[15]={0x00,
@@ -218,7 +217,6 @@ bool ControlCanDll::sendData(int index,int value,int value_command_type,int valu
    }
    else
    {
-//       QString id_text= _data.at(index);//启动报文返回的ID
        BYTE byte_arry_command_type[]={
                            0x00,//系统命令0
                            0x01,//写入参数1
@@ -237,8 +235,6 @@ bool ControlCanDll::sendData(int index,int value,int value_command_type,int valu
            0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x10,0x11,/*int*/0x12,0x13,0x14,0x15,0x16,0x17,0x18,0x19,0x1A,/*float*/0x1B,0x1C,
            0x1D,0x1E,0x1F,0x30,/*int*/0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x3A,0x3B,0x3C,0x3D,0x3E,0x3F,0x40,
            0x41,0x42,/*float*/0x50,/*int*/0x51,0x52,0x53,0x54,0x55,0x56,/*float*/0x60,/*int*/0x61,0x62,0x63,0x64,0x65,0x66,/*float*/
-
-
        };
        BYTE hall_test[]=//霍尔侦测
        {
@@ -299,9 +295,7 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
             {
                 VCI_CAN_OBJ receivedata= Receive_info();
                 int value= bytesToInt(receivedata.Data);
-//                qDebug()<<value<<"0x00"<<receivedata.Data<<receivedata.ID;
                 varMap.insert(0x00,value);
-//                Sleep(200);
             }
             break;
         }
@@ -312,8 +306,6 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
                 VCI_CAN_OBJ receivedata= Receive_info();
                 int value= bytesToInt(receivedata.Data);
                 varMap.insert(0x01,value);
-//                  qDebug()<<value<<"0x01"<<receivedata.ID<<receivedata.ID;
-//                Sleep(200);
             }
             break;
         }
@@ -325,8 +317,6 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
                 unsigned char pMem[] = {receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)pMem;
                 varMap.insert(0x02,*p );
-//                  qDebug()<<*p<<"0x02"<<receivedata.ID;
-//                Sleep(200);
             }
             break;
         }
@@ -338,8 +328,6 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
                 unsigned char pMem[] = {receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)pMem;
                 varMap.insert(0x03,*p );
-//                qDebug()<<*p<<"0x03"<<receivedata.ID;
-//                Sleep(200);
             }
             break;
         }
@@ -350,8 +338,6 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
                 VCI_CAN_OBJ receivedata= Receive_info();
                 int value= bytesToInt(receivedata.Data);
                 varMap.insert(0x04,value );
-//                qDebug()<<value<<"0x04"<<receivedata.ID;
-//                Sleep(200);
             }
             break;
         }
@@ -362,17 +348,13 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
                 VCI_CAN_OBJ receivedata= Receive_info();
                  int value= bytesToInt(receivedata.Data);
                  varMap.insert(0x10,value);
-                 unsigned char buf[4];
-                  buf[0]=value>>24;
-                  buf[1] = value>> 16;
-
-                  buf[2] =value >> 8;
-
-                  buf[3] =value;
+//                 unsigned char buf[4];
+//                  buf[0] = value>>24;
+//                  buf[1] = value>> 16;
+//                  buf[2] = value >> 8;
+//                  buf[3] = value;
 //                qDebug()<<value<<"0x10"<<receivedata.ID<< buf[0]<<buf[1]<< buf[2]<<buf[3]<<"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
              }
-
-//            Sleep(200);
         break;
         }
         case 6:
@@ -382,8 +364,6 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
                 VCI_CAN_OBJ receivedata= Receive_info();
                 int value=bytesToInt(receivedata.Data);
                 varMap.insert(0x20,value );
-//                qDebug()<<value<<"0x20"<<receivedata.ID;
-//                Sleep(200);
             }
             break;
         }
@@ -395,8 +375,6 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
                 unsigned char pMem[] = {receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)pMem;
                 varMap.insert(0x21,*p );
-//                qDebug()<<*p<<"0x21"<<receivedata.ID;
-//                Sleep(200);
             }
             break;
         }
@@ -407,9 +385,7 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
                 VCI_CAN_OBJ receivedata= Receive_info();
                 unsigned char pMem[] = {receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)pMem;
-//                qDebug()<<*p<<"0x22"<<receivedata.ID;
                 varMap.insert(0x22,*p );
-//                Sleep(200);
             }
             break;
         }
@@ -420,9 +396,7 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
                 VCI_CAN_OBJ receivedata= Receive_info();
                 unsigned char pMem[] = {receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)pMem;
-//                qDebug()<<*p<<"0x23"<<receivedata.ID;
                 varMap.insert(0x23,*p );
-//                Sleep(200);
             }
             break;
         }
@@ -433,9 +407,7 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
                 VCI_CAN_OBJ receivedata= Receive_info();
                 unsigned char pMem[] = {receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)pMem;
-//                qDebug()<<*p<<"0x24"<<receivedata.ID;
                 varMap.insert(0x24,*p );
-//                Sleep(200);
             }
             break;
         }
@@ -446,9 +418,7 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
                 VCI_CAN_OBJ receivedata= Receive_info();
                 unsigned char pMem[] = {receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)pMem;
-//                qDebug()<<*p<<"0x25"<<receivedata.ID;
                 varMap.insert(0x25,*p );
-//                Sleep(200);
             }
             break;
         }
@@ -459,9 +429,7 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
                 VCI_CAN_OBJ receivedata= Receive_info();
                 unsigned char pMem[] = {receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)pMem;
-//                qDebug()<<*p<<"0x26"<<receivedata.ID;
                 varMap.insert(0x26,*p );
-//                Sleep(200);
             }
             break;
         }
@@ -472,9 +440,7 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
                 VCI_CAN_OBJ receivedata= Receive_info();
                 unsigned char pMem[] = {receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)pMem;
-//                qDebug()<<*p<<"0x27"<<receivedata.ID;
                 varMap.insert(0x27,*p );
-//                Sleep(200);
             }
             break;
         }
@@ -485,9 +451,7 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
                 VCI_CAN_OBJ receivedata= Receive_info();
                 unsigned char pMem[] = {receivedata.Data[3],receivedata.Data[2],receivedata.Data[1],receivedata.Data[0]};
                 float *p = (float*)pMem;
-//                qDebug()<<*p<<"0x28";
                 varMap.insert(0x28,*p );
-//                Sleep(200);
             }
             break;
         }
@@ -503,7 +467,7 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
 VCI_CAN_OBJ ControlCanDll::Receive_info()
 {
     dataThread->start();
-    _isRecive=false;
+    _isRecive = false;
     VCI_CAN_OBJ receivedata;
     QStringList reciveStrList;
     int len ;
@@ -525,7 +489,7 @@ VCI_CAN_OBJ ControlCanDll::Receive_info()
               QString debugStr5 = QString("%1").arg(receivedata.Data[5],8,16,QLatin1Char('0'));
               QString debugStr6 = QString("%1").arg(receivedata.Data[6],8,16,QLatin1Char('0'));
               QString debugStr7 = QString("%1").arg(receivedata.Data[7],8,16,QLatin1Char('0'));
-              qDebug()<<debugStr0<<debugStr1<<debugStr2<<debugStr3<<debugStr4<<debugStr5<<"receivedata.ID"<<receivedata.ID<<"receive";
+//              qDebug()<<debugStr0<<debugStr1<<debugStr2<<debugStr3<<debugStr4<<debugStr5<<"receivedata.ID"<<receivedata.ID<<"receive";
 //              qDebug()<<debugStr0.toLower() <<debugStr1.toUInt()<<debugStr2.toUInt()<<debugStr3.toUInt()<<"ERROR";
              return receivedata;
    }
@@ -942,14 +906,14 @@ QMap<int,QVariant> ControlCanDll::HallDetectionB(int index)
 int ControlCanDll::bytesToInt(byte* bytes,int size)
 {
 
-  int addr  = bytes[0] & 0xFF;
-       addr |= (bytes[1] & 0x00FF);
-       addr |= (bytes[2] & 0x0000FF);
-       addr |= (bytes[3] & 0x000000FF);
+  int addr  =  bytes[3] & 0xFF;
+       addr |= (bytes[2] & 0x00FF);
+       addr |= (bytes[1] & 0x0000FF);
+       addr |= (bytes[0] & 0x000000FF);
         return addr;
 
 }
-void ControlCanDll::WriteData(int index,float value,int valueParameter_address)
+int ControlCanDll::WriteData(int index,float value,int valueParameter_address)
 {
 
     BYTE write_read_Parameter_address[]=//写入参数//读取参数
@@ -959,6 +923,7 @@ void ControlCanDll::WriteData(int index,float value,int valueParameter_address)
         0x41,0x42,/*float*/0x50,/*int*/0x51,0x52,0x53,0x54,0x55,0x56,/*float*/0x60,/*int*/0x61,0x62,0x63,0x64,0x65,0x66,/*float*/
 
     };
+
     union FloatToByte
     {
       unsigned char b[4];
@@ -980,20 +945,18 @@ void ControlCanDll::WriteData(int index,float value,int valueParameter_address)
            vco[i].Data[1] = FtoB.b[2];//配置数据
            vco[i].Data[2] = FtoB.b[1];//配置数据
            vco[i].Data[3] = FtoB.b[0];//配置数据
-//           vco[i].Data[0] = 0;//配置数据
-//           vco[i].Data[1] = 0;//配置数据
-//           vco[i].Data[2] = 0;//配置数据
-//           vco[i].Data[3] = 1;//配置数据
            vco[i].Data[4] = write_read_Parameter_address[valueParameter_address];//参数地址
            vco[i].Data[5] = 0x01;//命令类型
-           qDebug()<<id_text<<FtoB.value<<vco[i].Data[0]<<vco[i].Data[1]<<vco[i].Data[2]<<vco[i].Data[3]<<vco[i].Data[4]<<vco[i].Data[5] <<"gggggggggggggggggggggggggggggg";
+//           qDebug()<<valueParameter_address<<FtoB.value<<vco[i].Data[0]<<vco[i].Data[1]<<vco[i].Data[2]<<vco[i].Data[3]<<vco[i].Data[4]<<vco[i].Data[5] <<"gggggggggggggggggggggggggggggg";
        }
     if(getSendStatus())
     {
 
         dwRel = VCI_Transmit(_nDeviceType, _nDeviceInd, _nCANInd, vco,_size_num);
         VCI_CAN_OBJ receivedata=Receive_info();
-        qDebug()<<dwRel<<"ccccccccccccccccccccccc";
-
+        BYTE BYTES[4]={receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+        int value=bytesToInt(BYTES,4);
+        return value;
+//        qDebug()<<dwRel<<"ccccccccccccccccccccccc"<<receivedata.Data[0]<<receivedata.Data[1]<<receivedata.Data[2]<<receivedata.Data[3];
     }
 }

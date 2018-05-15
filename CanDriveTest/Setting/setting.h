@@ -4,14 +4,17 @@
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QFile>
+#include <QMap>
+#include <QVariant>
 class Setting : public QSettings
 {
 public:
     static Setting*init();
     Setting();
-    void setIni(QList<double> data,QString IniName);
+    void setIni(QMap<int,QVariant> data,QString IniName);
     QMap<int,QVariant>  ReadIniAttribute();
     QMap<int,QVariant>  ReadIniValue();
+    QMap<int,QVariant>  ReadIniPar(QString fileName);
     void writeIni();
 private:
     static  Setting *pSetting;

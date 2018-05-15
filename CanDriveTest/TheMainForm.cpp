@@ -13,7 +13,8 @@ TheMainForm::TheMainForm(QWidget *parent) :
     LoopADataForm::init();
     LoopBDataForm::init();
     ConfigDataForm::init();
-    connect(ui->comboBox_can_id, SIGNAL(currentIndexChanged(int)),this,SLOT(slotCanIdLoop(int)));
+//    connect(ui->comboBox_can_id, SIGNAL(currentIndexChanged(int)),this,SLOT(slotCanIdLoop(int)));
+    connect(ui->comboBox_can_id, SIGNAL(activated(int)),this,SLOT(slotCanIdLoop(int)));
     ALoopTimer = new QTimer(this);
     BLoopTimer = new QTimer(this);
     ConfigTimer = new QTimer(this);
@@ -23,9 +24,7 @@ TheMainForm::TheMainForm(QWidget *parent) :
     connect(LoopADataForm::init(), SIGNAL(signalCloseStatus(bool,int)),this,SLOT(slotClose(bool,int)));
     connect(LoopBDataForm::init(),  SIGNAL(signalCloseStatus(bool,int)),this,SLOT(slotClose(bool,int)));
     connect(ConfigDataForm::init(),  SIGNAL(signalCloseStatus(bool,int)),this,SLOT(slotClose(bool,int)));
-//    Setting::init();
-//    Setting::init()->ReadIni();
-     ui->comboBox_can_id->setEnabled(false);
+    ui->comboBox_can_id->setEnabled(false);
 }
 
 TheMainForm::~TheMainForm()

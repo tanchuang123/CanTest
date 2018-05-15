@@ -9,8 +9,10 @@
 #include <QtDebug>
 #include <QTimer>
 #include <QMessageBox>
+#include <QFileDialog>
 #include "SystemStatusForm.h"
 #include "ConfigDataWriteForm.h"
+#include "Setting/setting.h"
 struct InfoMapDataConfig{
     int level;                                //0为第一层1为第二层依次类推
     QString key;                          //关键字
@@ -68,8 +70,13 @@ private slots:
     void slotConfigStatus(int);
     void slotHallDataA();
     void slotHallDataB();
+    void on_pushButton_OUT_clicked();
+
+    void on_pushButton_IN_clicked();
+
 signals:
     void signalCloseStatus(bool,int);
+//    void signalValueData(int,QString);
 private:
     static  ConfigDataForm *pConfigDataForm;
     Ui::ConfigDataForm *ui;

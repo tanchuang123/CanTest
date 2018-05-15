@@ -9,6 +9,7 @@ ConfigDataWriteForm::ConfigDataWriteForm(QWidget *parent) :
     WriteDataDialog::init();
     connect( ui->tableWidget_Write, SIGNAL(cellDoubleClicked (int, int)), this, SLOT( cellSelected( int, int )));
     connect(WriteDataDialog::init(), SIGNAL(signalValue(int,QString)),this ,SLOT(slotTableWidgetItem(int,QString)));
+//    connect(ConfigDataForm::init(), SIGNAL(signalValueData(int,QString)),this ,SLOT(slotTableWidgetItem(int,QString)));
 }
 ConfigDataWriteForm * ConfigDataWriteForm:: init()
 {
@@ -31,7 +32,7 @@ void ConfigDataWriteForm::initTableWidget()
 
       ui->tableWidget_Write->setAlternatingRowColors (true);
       ui->tableWidget_Write->setAlternatingRowColors(true);
-      ui->tableWidget_Write->setRowCount(valueMap1.size()-1);
+      ui->tableWidget_Write->setRowCount(valueMap1.size());
       ui->tableWidget_Write->setColumnCount(3);
 //      ui->tableWidget_Write->currentIndex()
       QStringList headerString;
@@ -41,13 +42,14 @@ void ConfigDataWriteForm::initTableWidget()
       ui->tableWidget_Write->horizontalHeader()->setStretchLastSection(true);//关键
       ui->tableWidget_Write->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
       ui->tableWidget_Write->setEditTriggers(QAbstractItemView::NoEditTriggers);
-//        ui->tableWidget_Write->setShowGrid(false);
+      ui->tableWidget_Write->setShowGrid(true);
       ui->tableWidget_Write->setSelectionBehavior(QAbstractItemView::SelectRows);
       ui->tableWidget_Write->setSelectionMode(QAbstractItemView::SingleSelection);
       for(int i=0;i<valueMap1.size();i++)
       {
            ui->tableWidget_Write->setItem(i,0,new QTableWidgetItem(valueMap1.value(i).toString()));
            ui->tableWidget_Write->setItem(i,1,new QTableWidgetItem(valueMap2.value(i).toString()));
+           qDebug()<<valueMap1.size()<<"i";
       }
     show();
 }
