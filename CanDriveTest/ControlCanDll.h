@@ -54,7 +54,7 @@ public:
      bool openHallDetectionB(int index);
      QMap<int ,QVariant> HallDetectionA(int index);
      QMap<int,QVariant>  HallDetectionB(int index);
-     int WriteData(int index,float value,int valueParameter_address);
+     int WriteData(int index,QString value,int valueParameter_address,bool isUType);
      void  getStatusMap_(QMap<int,QVariant> map)
      {
          if(!_varMapStatus.isEmpty())

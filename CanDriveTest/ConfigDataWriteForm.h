@@ -21,9 +21,12 @@ public:
     explicit ConfigDataWriteForm(QWidget *parent = 0);
     void initTableWidget();
     ~ConfigDataWriteForm();
+    void SendDataType(int row);
 public slots:
     void cellSelected( int nRow, int nCol);
     void slotTableWidgetItem(int,QString);
+signals:
+    void signalTypeData(bool);
 private:
     static ConfigDataWriteForm * pConfigDataWriteForm;
     Ui::ConfigDataWriteForm *ui;

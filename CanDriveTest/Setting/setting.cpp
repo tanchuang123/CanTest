@@ -5,7 +5,6 @@ Setting * Setting::pSetting = Q_NULLPTR;
 Setting::Setting()
 {
 
-
 }
 Setting *Setting::init()
 {
@@ -101,8 +100,16 @@ QMap<int,QVariant>  Setting::ReadIniPar(QString fileName)
     for(int i=0;i<56;i++)
     {
       sArg1 = pIni->value("/setting/dataValue"+tr("%1").arg(i)).toString();
-//      qDebug()<<sArg1<<"sArg1";
       valueMap.insert(i,sArg1);
     }
     return valueMap;
+}
+QString  Setting::ReadIniDataType(int index)
+{
+    pIni=new QSettings("config.ini",QSettings::IniFormat);
+    pIni->setIniCodec(QTextCodec::codecForName("GBK"));
+
+    QString sArg = "";
+    sArg = pIni->value("/setting/dataType"+tr("%1").arg(index)).toString();
+    return sArg;
 }

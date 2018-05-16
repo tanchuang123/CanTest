@@ -73,10 +73,9 @@ private slots:
     void on_pushButton_OUT_clicked();
 
     void on_pushButton_IN_clicked();
-
+    void slotTypeData(bool);
 signals:
-    void signalCloseStatus(bool,int);
-//    void signalValueData(int,QString);
+    void signalCloseStatus(bool,int); 
 private:
     static  ConfigDataForm *pConfigDataForm;
     Ui::ConfigDataForm *ui;
@@ -84,6 +83,7 @@ private:
     bool _isPressedSection = true;
     QTimer *HallTimerA;
     QTimer *HallTimerB;
+    bool _type;
 };
 
 #endif // CONFIGDATAFORM_H

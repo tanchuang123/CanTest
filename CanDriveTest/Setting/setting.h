@@ -15,6 +15,7 @@ public:
     QMap<int,QVariant>  ReadIniAttribute();
     QMap<int,QVariant>  ReadIniValue();
     QMap<int,QVariant>  ReadIniPar(QString fileName);
+    QString  ReadIniDataType(int index);
     void writeIni();
 private:
     static  Setting *pSetting;

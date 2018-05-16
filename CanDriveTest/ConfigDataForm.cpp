@@ -35,6 +35,7 @@ ConfigDataForm::ConfigDataForm(QWidget *parent) :
     connect(HallTimerB , SIGNAL(timeout()), this, SLOT(slotHallDataB()));
     ConfigDataWriteForm::init();
     Setting::init();
+    connect( ConfigDataWriteForm::init(),SIGNAL(signalTypeData(bool)),this,SLOT(slotTypeData(bool)));
 }
 ConfigDataForm *ConfigDataForm::init()
 {
@@ -190,7 +191,7 @@ void ConfigDataForm::closeEvent(QCloseEvent * event)
 {
 
     emit signalCloseStatus(true,2);
-   qDebug()<<QStringLiteral("我是关闭Config");
+    qDebug()<<QStringLiteral("我是关闭Config");
 }
 void ConfigDataForm::slotConfigStatus(int index)
 {
@@ -307,8 +308,9 @@ void ConfigDataForm::on_pushButton_IN_clicked()
         QMap<int,QVariant> map= Setting::init()->ReadIniPar(fileName);
         for(int i=0;i<map.size();i++)
         {
-             int valueBack= ControlCanDll::init()->WriteData(4,map.value(i).toFloat(),i);
-//               qDebug()<<valueBack<<map.value(i).toString()<<i;
+            ConfigDataWriteForm::init()->SendDataType(i);
+             int valueBack= ControlCanDll::init()->WriteData(4,map.value(i).toString(),i,_type);
+             qDebug()<<"_type"<<_type;
              if( valueBack==0)
              {
                  ConfigDataWriteForm::init()->slotTableWidgetItem(i, map.value(i).toString());
@@ -324,7 +326,8 @@ void ConfigDataForm::on_pushButton_IN_clicked()
         }
     }
 
-
-
-
+}
+void ConfigDataForm::slotTypeData(bool type)
+{
+    _type=type;
 }

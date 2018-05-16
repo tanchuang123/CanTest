@@ -913,9 +913,18 @@ int ControlCanDll::bytesToInt(byte* bytes,int size)
         return addr;
 
 }
-int ControlCanDll::WriteData(int index,float value,int valueParameter_address)
+int ControlCanDll::WriteData(int index,QString value,int valueParameter_address,bool isUType)
 {
 
+
+    DWORD dwRel;
+    VCI_CAN_OBJ vco[48];
+    QString id_text= _data.at(index);//启动报文返回的ID
+    union FloatToByte
+    {
+      unsigned char b[4];
+      float value;
+    } FtoB;
     BYTE write_read_Parameter_address[]=//写入参数//读取参数
     {
         0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x10,0x11,/*int*/0x12,0x13,0x14,0x15,0x16,0x17,0x18,0x19,0x1A,/*float*/0x1B,0x1C,
@@ -923,40 +932,65 @@ int ControlCanDll::WriteData(int index,float value,int valueParameter_address)
         0x41,0x42,/*float*/0x50,/*int*/0x51,0x52,0x53,0x54,0x55,0x56,/*float*/0x60,/*int*/0x61,0x62,0x63,0x64,0x65,0x66,/*float*/
 
     };
-
-    union FloatToByte
+    if(isUType)
     {
-      unsigned char b[4];
-      float value;
-    } FtoB;
-       DWORD dwRel;
-       VCI_CAN_OBJ vco[48];
-       QString id_text= _data.at(index);//启动报文返回的ID
+          unsigned int iValue =  value.toUInt();
+          BYTE src[4];
+          src[3] =  (BYTE) ((iValue>>24) & 0xFF);
+          src[2] =  (BYTE) ((iValue>>16) & 0xFF);
+          src[1] =  (BYTE) ((iValue>>8) & 0xFF);
+          src[0] =  (BYTE) (iValue & 0xFF);
 
-       FtoB.value= value;
-       for(int i=0;i<48;i++)
+          for(int i=0;i<48;i++)
+          {
+              vco[i].ID =  id_text.toUInt(0,16);
+              vco[i].RemoteFlag = 0;
+              vco[i].ExternFlag = 0;
+              vco[i].DataLen = 6;
+
+              vco[i].Data[0] = src[3];//配置数据
+              vco[i].Data[1] = src[2];//配置数据
+              vco[i].Data[2] = src[1];//配置数据
+              vco[i].Data[3] = src[0];//配置数据
+              vco[i].Data[4] = write_read_Parameter_address[valueParameter_address];//参数地址
+              vco[i].Data[5] = 0x01;//命令类型
+          }
+       if(getSendStatus())
        {
-           vco[i].ID =  id_text.toUInt(0,16);
-           vco[i].RemoteFlag = 0;
-           vco[i].ExternFlag = 0;
-           vco[i].DataLen = 6;
 
-           vco[i].Data[0] = FtoB.b[3];//配置数据
-           vco[i].Data[1] = FtoB.b[2];//配置数据
-           vco[i].Data[2] = FtoB.b[1];//配置数据
-           vco[i].Data[3] = FtoB.b[0];//配置数据
-           vco[i].Data[4] = write_read_Parameter_address[valueParameter_address];//参数地址
-           vco[i].Data[5] = 0x01;//命令类型
-//           qDebug()<<valueParameter_address<<FtoB.value<<vco[i].Data[0]<<vco[i].Data[1]<<vco[i].Data[2]<<vco[i].Data[3]<<vco[i].Data[4]<<vco[i].Data[5] <<"gggggggggggggggggggggggggggggg";
+           dwRel = VCI_Transmit(_nDeviceType, _nDeviceInd, _nCANInd, vco,_size_num);
+           VCI_CAN_OBJ receivedata=Receive_info();
+           BYTE BYTES[4]={receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+           int value=bytesToInt(BYTES,4);
+           return value;
        }
-    if(getSendStatus())
-    {
 
-        dwRel = VCI_Transmit(_nDeviceType, _nDeviceInd, _nCANInd, vco,_size_num);
-        VCI_CAN_OBJ receivedata=Receive_info();
-        BYTE BYTES[4]={receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
-        int value=bytesToInt(BYTES,4);
-        return value;
-//        qDebug()<<dwRel<<"ccccccccccccccccccccccc"<<receivedata.Data[0]<<receivedata.Data[1]<<receivedata.Data[2]<<receivedata.Data[3];
+    }
+    else
+    {
+        FtoB.value = value.toFloat();
+        for(int i=0;i<48;i++)
+        {
+            vco[i].ID =  id_text.toUInt(0,16);
+            vco[i].RemoteFlag = 0;
+            vco[i].ExternFlag = 0;
+            vco[i].DataLen = 6;
+
+            vco[i].Data[0] = FtoB.b[3];//配置数据
+            vco[i].Data[1] = FtoB.b[2];//配置数据
+            vco[i].Data[2] = FtoB.b[1];//配置数据
+            vco[i].Data[3] = FtoB.b[0];//配置数据
+            vco[i].Data[4] = write_read_Parameter_address[valueParameter_address];//参数地址
+            vco[i].Data[5] = 0x01;//命令类型
+        }
+     if(getSendStatus())
+     {
+
+         dwRel = VCI_Transmit(_nDeviceType, _nDeviceInd, _nCANInd, vco,_size_num);
+         VCI_CAN_OBJ receivedata=Receive_info();
+         BYTE BYTES[4]={receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+         int value=bytesToInt(BYTES,4);
+         return value;
+     }
     }
 }

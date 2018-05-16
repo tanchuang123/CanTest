@@ -15,7 +15,7 @@ public:
     static WriteDataDialog *init();
     explicit WriteDataDialog(QWidget *parent = 0);
     ~WriteDataDialog();
-    void GetStatusValue(const QString &text , int value);
+    void GetStatusValue(const QString &text , int value,QString &type);
 private slots:
     void on_pushButton_WriteOK_clicked();
  signals:
@@ -23,6 +23,7 @@ private slots:
 private:
     static WriteDataDialog *pWriteDataDialog;
     Ui::WriteDataDialog *ui;
+    QString _Type="";
 };
 
 #endif // WRITEDATADIALOG_H

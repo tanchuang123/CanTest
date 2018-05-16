@@ -25,34 +25,54 @@ WriteDataDialog::~WriteDataDialog()
 
 void WriteDataDialog::on_pushButton_WriteOK_clicked()
 {
-    if(!ui->lineEdit_ConfigData->text().isEmpty())
+    if((!ui->lineEdit_ConfigData->text().isEmpty())&&(!_Type.isEmpty()))
     {
         QString valueText=ui->lineEdit_ConfigData->text();
-        float value = valueText.toFloat();
-//        qDebug()<<value <<"ccccccccccccccccccccccccccccccccvalueText.toFloat()";
-        QString indexStr= ui->label_value->text();
-        int indexValue = indexStr.toInt();
-       int valueBack= ControlCanDll::init()->WriteData(4,value,indexValue);
-       if( valueBack==0)
-       {
-           emit signalValue(indexValue, valueText);
-       }
-       if(valueBack==1)
-       {
-           emit signalValue(indexValue,QStringLiteral("写入的参数超过最大阈值 "));
-       }
-       if(valueBack==2)
-       {
-           emit signalValue(indexValue, QStringLiteral("写入的参数低于最小阈值 "));
-       }
+        if(_Type=="Uint32")
+        {
+            QString indexStr= ui->label_value->text();
+            int indexValue = indexStr.toInt();
+            int valueBack= ControlCanDll::init()->WriteData(4,valueText,indexValue,true);
+            if( valueBack==0)
+            {
+                emit signalValue(indexValue, valueText);
+            }
+            if(valueBack==1)
+            {
+                emit signalValue(indexValue,QStringLiteral("写入的参数超过最大阈值 "));
+            }
+            if(valueBack==2)
+            {
+                emit signalValue(indexValue, QStringLiteral("写入的参数低于最小阈值 "));
+            }
+        }
+        else {
+            QString indexStr= ui->label_value->text();
+            int indexValue = indexStr.toInt();
+            int valueBack= ControlCanDll::init()->WriteData(4,valueText,indexValue,false);
+            if( valueBack==0)
+            {
+                emit signalValue(indexValue, valueText);
+            }
+            if(valueBack==1)
+            {
+                emit signalValue(indexValue,QStringLiteral("写入的参数超过最大阈值 "));
+            }
+            if(valueBack==2)
+            {
+                emit signalValue(indexValue, QStringLiteral("写入的参数低于最小阈值 "));
+            }
+        }
+
        close();
     }
 
 }
-void WriteDataDialog::GetStatusValue(const QString &text , int value )
+void WriteDataDialog::GetStatusValue(const QString &text , int value,QString &type )
 {
      setWindowTitle(QStringLiteral("写入窗"));
-     ui->label_attribute->setText(text);
+     _Type = type;
+     ui->label_attribute->setText(text+"("+type+")");
      ui->label_value ->setText(tr("%1").arg(value));
      show();
 }

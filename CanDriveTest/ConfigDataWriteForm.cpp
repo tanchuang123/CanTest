@@ -49,7 +49,7 @@ void ConfigDataWriteForm::initTableWidget()
       {
            ui->tableWidget_Write->setItem(i,0,new QTableWidgetItem(valueMap1.value(i).toString()));
            ui->tableWidget_Write->setItem(i,1,new QTableWidgetItem(valueMap2.value(i).toString()));
-           qDebug()<<valueMap1.size()<<"i";
+//           qDebug()<<valueMap1.size()<<"i";
       }
     show();
 }
@@ -57,9 +57,21 @@ void ConfigDataWriteForm::cellSelected( int nRow, int nCol)
 {
      QString text= ui->tableWidget_Write->item(nRow,0)->text();//item(行，列)
      QString str= ui->tableWidget_Write->item(nRow,1)->text();//item(行，列)
-     WriteDataDialog::init()->GetStatusValue(text,nRow);
+     QString type = Setting::init()->ReadIniDataType(nRow);
+     WriteDataDialog::init()->GetStatusValue(text,nRow,type);
 }
 void ConfigDataWriteForm::slotTableWidgetItem(int index,QString text)
 {
       ui->tableWidget_Write->setItem(index,2,new QTableWidgetItem(text));
+}
+void ConfigDataWriteForm::SendDataType(int row)
+{
+    QString type = Setting::init()->ReadIniDataType(row);
+     if(type=="Uint32")
+     {
+         emit signalTypeData( true);
+     }
+     else {
+         emit signalTypeData( false);
+     }
 }
