@@ -30,6 +30,7 @@ public:
     };
     explicit TheMainForm(QWidget *parent = 0);
     ~TheMainForm();
+    void initDriverAB();
 private slots:
     void on_pushButton_Start_can_clicked();
 
@@ -42,6 +43,12 @@ private slots:
     void slotConfigData();
     void slotClose(bool,int);
 
+    void on_pushButton_send_vate_clicked();
+    void slotChangeElecID(int index);
+    void slotOneDriverState(int);
+    void slotDoubleDriverState(int);
+    void on_pushButton_stopNow_clicked();
+
 private:
     Ui::TheMainForm *ui;
     messageDialog *Message_Dialog = Q_NULLPTR;
@@ -50,6 +57,7 @@ private:
     QTimer *ALoopTimer;
     QTimer *BLoopTimer;
     QTimer *ConfigTimer;
+    UINT _ID;
 
 };
 

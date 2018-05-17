@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
-
+QT       += charts serialport
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = CanDriveTest

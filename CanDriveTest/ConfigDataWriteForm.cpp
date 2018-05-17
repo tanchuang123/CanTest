@@ -49,14 +49,13 @@ void ConfigDataWriteForm::initTableWidget()
       {
            ui->tableWidget_Write->setItem(i,0,new QTableWidgetItem(valueMap1.value(i).toString()));
            ui->tableWidget_Write->setItem(i,1,new QTableWidgetItem(valueMap2.value(i).toString()));
-//           qDebug()<<valueMap1.size()<<"i";
       }
     show();
 }
 void ConfigDataWriteForm::cellSelected( int nRow, int nCol)
 {
      QString text= ui->tableWidget_Write->item(nRow,0)->text();//item(行，列)
-     QString str= ui->tableWidget_Write->item(nRow,1)->text();//item(行，列)
+     QString str  = ui->tableWidget_Write->item(nRow,1)->text();//item(行，列)
      QString type = Setting::init()->ReadIniDataType(nRow);
      WriteDataDialog::init()->GetStatusValue(text,nRow,type);
 }

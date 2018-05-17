@@ -467,7 +467,7 @@ QMap<int,QVariant> ControlCanDll::Data_Back(int index)
 VCI_CAN_OBJ ControlCanDll::Receive_info()
 {
     dataThread->start();
-    _isRecive = false;
+    _isRecive =false;
     VCI_CAN_OBJ receivedata;
     QStringList reciveStrList;
     int len ;
@@ -481,14 +481,14 @@ VCI_CAN_OBJ ControlCanDll::Receive_info()
    }
    else
    {
-              QString debugStr0 = QString("%1").arg(receivedata.Data[0],8,16,QLatin1Char('0'));
-              QString debugStr1 = QString("%1").arg(receivedata.Data[1],8,16,QLatin1Char('0'));
-              QString debugStr2 = QString("%1").arg(receivedata.Data[2],8,16,QLatin1Char('0'));
-              QString debugStr3 = QString("%1").arg(receivedata.Data[3],8,16,QLatin1Char('0'));
-              QString debugStr4 = QString("%1").arg(receivedata.Data[4],8,16,QLatin1Char('0'));
-              QString debugStr5 = QString("%1").arg(receivedata.Data[5],8,16,QLatin1Char('0'));
-              QString debugStr6 = QString("%1").arg(receivedata.Data[6],8,16,QLatin1Char('0'));
-              QString debugStr7 = QString("%1").arg(receivedata.Data[7],8,16,QLatin1Char('0'));
+//              QString debugStr0 = QString("%1").arg(receivedata.Data[0],8,16,QLatin1Char('0'));
+//              QString debugStr1 = QString("%1").arg(receivedata.Data[1],8,16,QLatin1Char('0'));
+//              QString debugStr2 = QString("%1").arg(receivedata.Data[2],8,16,QLatin1Char('0'));
+//              QString debugStr3 = QString("%1").arg(receivedata.Data[3],8,16,QLatin1Char('0'));
+//              QString debugStr4 = QString("%1").arg(receivedata.Data[4],8,16,QLatin1Char('0'));
+//              QString debugStr5 = QString("%1").arg(receivedata.Data[5],8,16,QLatin1Char('0'));
+//              QString debugStr6 = QString("%1").arg(receivedata.Data[6],8,16,QLatin1Char('0'));
+//              QString debugStr7 = QString("%1").arg(receivedata.Data[7],8,16,QLatin1Char('0'));
 //              qDebug()<<debugStr0<<debugStr1<<debugStr2<<debugStr3<<debugStr4<<debugStr5<<"receivedata.ID"<<receivedata.ID<<"receive";
 //              qDebug()<<debugStr0.toLower() <<debugStr1.toUInt()<<debugStr2.toUInt()<<debugStr3.toUInt()<<"ERROR";
              return receivedata;
@@ -916,7 +916,6 @@ int ControlCanDll::bytesToInt(byte* bytes,int size)
 int ControlCanDll::WriteData(int index,QString value,int valueParameter_address,bool isUType)
 {
 
-
     DWORD dwRel;
     VCI_CAN_OBJ vco[48];
     QString id_text= _data.at(index);//启动报文返回的ID
@@ -993,4 +992,47 @@ int ControlCanDll::WriteData(int index,QString value,int valueParameter_address,
          return value;
      }
     }
+}
+void ControlCanDll::WriteDebugData(int index,float value)
+{
+    DWORD dwRel;
+    VCI_CAN_OBJ vco[48];
+    QString id_text= _data.at(index);//启动报文返回的ID
+    union FloatToByte
+    {
+      unsigned char b[4];
+      float value;
+    } FtoB;
+
+      FtoB.value = value;
+      for(int i=0;i<48;i++)
+      {
+          vco[i].ID =  id_text.toUInt(0,16);
+          vco[i].RemoteFlag = 0;
+          vco[i].ExternFlag = 0;
+          vco[i].DataLen = 6;
+          vco[i].Data[0] = FtoB.b[0];//配置数据
+          vco[i].Data[1] = FtoB.b[1];//配置数据
+          vco[i].Data[2] = FtoB.b[2];//配置数据
+          vco[i].Data[3] = FtoB.b[3];//配置数据
+          vco[i].Data[4] = 0x02;//参数地址
+          vco[i].Data[5] = 0x10;//命令类型
+
+
+          BYTE BYTES[4]={FtoB.b[0],FtoB.b[1],FtoB.b[2],FtoB.b[3]};
+          float *p = (float*)BYTES;
+          qDebug()<<FtoB.b[0]<<FtoB.b[1]<<FtoB.b[2]<<FtoB.b[3]<<"canshu"<<*p;
+          qDebug()<<vco[i].Data[0]<<vco[i].Data[1]<<vco[i].Data[2]<<vco[i].Data[3];
+      }
+       if(getSendStatus())
+       {
+
+           dwRel = VCI_Transmit(_nDeviceType, _nDeviceInd, _nCANInd, vco,_size_num);
+           VCI_CAN_OBJ receivedata=Receive_info();
+           BYTE BYTES[4]={receivedata.Data[0],receivedata.Data[1],receivedata.Data[2],receivedata.Data[3]};
+           int value=bytesToInt(BYTES,4);
+
+
+       }
+
 }

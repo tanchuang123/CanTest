@@ -31,8 +31,12 @@ ConfigDataForm::ConfigDataForm(QWidget *parent) :
     SystemStatusForm::init();
     HallTimerA = new QTimer(this);
     HallTimerB = new QTimer(this);
+    stopHallTimerA = new QTimer(this);
+    stopHallTimerB = new QTimer(this);
     connect(HallTimerA , SIGNAL(timeout()), this, SLOT(slotHallDataA()));
     connect(HallTimerB , SIGNAL(timeout()), this, SLOT(slotHallDataB()));
+    connect(stopHallTimerA , SIGNAL(timeout()), this, SLOT(slotStopHallDataA()));
+    connect(stopHallTimerB , SIGNAL(timeout()), this, SLOT(slotStopHallDataB()));
     ConfigDataWriteForm::init();
     Setting::init();
     connect( ConfigDataWriteForm::init(),SIGNAL(signalTypeData(bool)),this,SLOT(slotTypeData(bool)));
@@ -224,6 +228,7 @@ void ConfigDataForm::slotConfigStatus(int index)
          if(ControlCanDll::init()->openHallDetectionA(4))
          {
               HallTimerA->start(3000);
+              stopHallTimerA->start(60000);
          }
 
     }
@@ -234,6 +239,7 @@ void ConfigDataForm::slotConfigStatus(int index)
         {
 
              HallTimerB->start(3000);
+             stopHallTimerB->start(60000);
         }
 
     }
@@ -244,6 +250,8 @@ void ConfigDataForm::slotConfigStatus(int index)
        ControlCanDll::init()->openHallDetectionB(4);
        HallTimerA->start(3000);
        HallTimerB->start(3000);
+       stopHallTimerA->start(60000);
+       stopHallTimerB->start(60000);
     }
         break;
     default:
@@ -256,11 +264,11 @@ void ConfigDataForm::slotHallDataA()
       QMap<int,QVariant> varMap = ControlCanDll::init()->HallDetectionA(4);
       for(int i=0;i<varMap.size();i++)
       {
-
           ui->widget_A->setText(QStringLiteral("A路电机侦测中.....请等待!"));
           if(varMap.value(0x02).toUInt()==1)
           {
               HallTimerA->stop();
+              stopHallTimerA->stop();
               ChMessageOkCancel(QStringLiteral( "A回路霍尔侦测完成，请重新读取参数"));
               ui->widget_A->setText(" ");
               break;
@@ -268,7 +276,7 @@ void ConfigDataForm::slotHallDataA()
           qDebug()<<varMap.size()<< varMap.value(0x02).toUInt()<<"0X02";
       }
 }
- void ConfigDataForm::slotHallDataB()
+void ConfigDataForm::slotHallDataB()
  {
             QMap<int,QVariant> varMap = ControlCanDll::init()->HallDetectionB(4);
              qDebug()<<varMap.size()<< varMap.value(0x04).toUInt()<<"0X04";
@@ -278,6 +286,7 @@ void ConfigDataForm::slotHallDataA()
                 if(varMap.value(0x04).toUInt()==1)
                 {
                     HallTimerB->stop();
+                    stopHallTimerB->stop();
                     ChMessageOkCancel(QStringLiteral( "B回路霍尔侦测完成，请重新读取参数"));
                     ui->widget_B->setText(" ");
                     break;
@@ -285,10 +294,24 @@ void ConfigDataForm::slotHallDataA()
             }
 
 }
-
+void ConfigDataForm::slotStopHallDataA()
+{
+     HallTimerA->stop();
+     stopHallTimerA->stop();
+     ChMessageOkCancel(QStringLiteral( "A回路霍尔侦测失败"));
+     ui->widget_A->setText(" ");
+}
+void ConfigDataForm::slotStopHallDataB()
+{
+     HallTimerB->stop();
+     stopHallTimerB->stop();
+     ChMessageOkCancel(QStringLiteral( "B回路霍尔侦测失败"));
+     ui->widget_B->setText(" ");
+}
 void ConfigDataForm::on_pushButton_OUT_clicked()
 {
 
+    ChMessageOkCancel(QStringLiteral( "导出文件"));
     if(ControlCanDll::init()->getReciveStatus())
     {
         QMap<int,QVariant> dataMap= ControlCanDll::init()->read_configdata_back(4);
@@ -310,7 +333,7 @@ void ConfigDataForm::on_pushButton_IN_clicked()
         {
             ConfigDataWriteForm::init()->SendDataType(i);
              int valueBack= ControlCanDll::init()->WriteData(4,map.value(i).toString(),i,_type);
-             qDebug()<<"_type"<<_type;
+//             qDebug()<<"_type"<<_type;
              if( valueBack==0)
              {
                  ConfigDataWriteForm::init()->slotTableWidgetItem(i, map.value(i).toString());

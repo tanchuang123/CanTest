@@ -70,8 +70,9 @@ private slots:
     void slotConfigStatus(int);
     void slotHallDataA();
     void slotHallDataB();
+    void slotStopHallDataA();
+    void slotStopHallDataB();
     void on_pushButton_OUT_clicked();
-
     void on_pushButton_IN_clicked();
     void slotTypeData(bool);
 signals:
@@ -83,6 +84,8 @@ private:
     bool _isPressedSection = true;
     QTimer *HallTimerA;
     QTimer *HallTimerB;
+    QTimer *stopHallTimerA;
+    QTimer *stopHallTimerB;
     bool _type;
 };
 
